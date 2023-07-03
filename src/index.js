@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const usersRouter = require("./routes/users");
+const breedsRouter = require("./routes/breeds");
 
 const app = express();
 const port = 4000;
@@ -34,3 +35,4 @@ app.use(express.json());
 
 // Rutas
 app.use(usersRouter);
+app.use(breedsRouter);
