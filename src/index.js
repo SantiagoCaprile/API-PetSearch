@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const usersRouter = require("./routes/users");
@@ -30,6 +31,9 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
 });
+
+// Middleware para permitir solicitudes desde cualquier origen
+app.use(cors());
 
 // Middleware para analizar el cuerpo de las solicitudes
 app.use(express.json());

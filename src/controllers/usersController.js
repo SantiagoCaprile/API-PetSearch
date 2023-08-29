@@ -1,6 +1,5 @@
 // controllers/usersController.js
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
 
 // Controlador para crear un nuevo usuario
 exports.createUser = async (req, res) => {
@@ -57,9 +56,10 @@ exports.verifyCredentials = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
-
     // Credenciales válidas
-    res.status(200).json({ message: "Credenciales válidas" });
+    res
+      .status(200)
+      .json({ message: "Credenciales válidas", user: user.nombre });
   } catch (error) {
     console.error("Error al verificar las credenciales", error);
     res.status(500).json({ message: "Error al verificar las credenciales" });
