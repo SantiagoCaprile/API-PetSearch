@@ -5,6 +5,8 @@ require("dotenv").config();
 const usersRouter = require("./routes/users");
 const breedsRouter = require("./routes/breeds");
 const petsRouter = require("./routes/pets");
+const adoptionRouter = require("./routes/adoptionForms");
+const rescuersRouter = require("./routes/rescuers");
 
 const app = express();
 const port = 4000;
@@ -42,3 +44,5 @@ app.use(express.json());
 app.use(usersRouter);
 app.use(breedsRouter);
 app.use(petsRouter);
+app.use(adoptionRouter);
+app.use(rescuersRouter);
