@@ -4,7 +4,7 @@ const User = require("../models/user");
 // Controlador para crear un nuevo usuario
 exports.createUser = async (req, res) => {
   try {
-    const { email, nombre, password } = req.body;
+    const { email, name, password } = req.body;
 
     // Verificar si el usuario ya existe en la base de datos
     const existingUser = await User.findOne({ email });
@@ -15,7 +15,7 @@ exports.createUser = async (req, res) => {
     // Crear el nuevo usuario
     const newUser = new User({
       email,
-      nombre,
+      name,
       password,
     });
 
@@ -57,9 +57,11 @@ exports.verifyCredentials = async (req, res) => {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
     // Credenciales válidas
-    res
-      .status(200)
-      .json({ message: "Credenciales válidas", user: user.nombre });
+    console.log("user:", user);
+    res.status(200).json({
+      message: "Credenciales válidas",
+      user: user.name,
+    });
   } catch (error) {
     console.error("Error al verificar las credenciales", error);
     res.status(500).json({ message: "Error al verificar las credenciales" });
