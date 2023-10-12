@@ -105,6 +105,16 @@ async function createPet(req, res) {
   }
 }
 
+async function getAllPets(req, res) {
+  try {
+    const pets = await Pet.find();
+
+    res.status(200).json(pets);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener las mascotas." });
+  }
+}
+
 async function getPetsBySpecies(req, res) {
   try {
     const { species } = req.params;
@@ -157,6 +167,7 @@ async function getRandomAnimals(req, res) {
 
 module.exports = {
   createPet,
+  getAllPets,
   getPetsBySpecies,
   getRandomAnimals,
 };
