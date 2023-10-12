@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const morgan = require("morgan");
 const usersRouter = require("./routes/users");
 const breedsRouter = require("./routes/breeds");
 const petsRouter = require("./routes/pets");
@@ -39,6 +40,9 @@ app.use(cors());
 
 // Middleware para analizar el cuerpo de las solicitudes
 app.use(express.json());
+
+// Middleware para registrar las solicitudes que llegan al servidor
+app.use(morgan("dev"));
 
 // Rutas
 app.use(usersRouter);
