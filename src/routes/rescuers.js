@@ -1,23 +1,30 @@
-const express = require("express");
-const router = express.Router();
-const rescuerController = require("../controllers/rescuerController");
+import { Router } from "express";
+const router = Router();
+import {
+	createRescuer,
+	getRescuers,
+	getRescuerById,
+	updateRescuer,
+	addPetToRescuer,
+	removePetFromRescuer,
+} from "../controllers/rescuerController.js";
 
 // Ruta para crear un nuevo rescatista
-router.post("/rescuers", rescuerController.createRescuer);
+router.post("/rescuers", createRescuer);
 
 // Ruta para obtener la lista de rescatistas
-router.get("/rescuers", rescuerController.getRescuers);
+router.get("/rescuers", getRescuers);
 
 // Ruta para obtener un rescatista por id
-router.get("/rescuers/:id", rescuerController.getRescuerById);
+router.get("/rescuers/:id", getRescuerById);
 
 // Ruta para actualizar un rescatista
-router.put("/rescuers/:id", rescuerController.updateRescuer);
+router.put("/rescuers/:id", updateRescuer);
 
 // Ruta para agregar una mascota a un rescatista
-router.post("/rescuers/:id/pets", rescuerController.addPetToRescuer);
+router.post("/rescuers/:id/pets", addPetToRescuer);
 
 // Ruta para eliminar una mascota de un rescatista
-router.delete("/rescuers/:id/pets", rescuerController.removePetFromRescuer);
+router.delete("/rescuers/:id/pets", removePetFromRescuer);
 
-module.exports = router;
+export default router;

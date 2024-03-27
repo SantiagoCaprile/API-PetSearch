@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const breedSchema = new mongoose.Schema({
-  species: {
-    type: String,
-    required: true,
-    enum: ["dog", "cat", "other"],
-  },
-  breeds: [String],
+const breedSchema = new Schema({
+	species: {
+		type: String,
+		required: true,
+		enum: ["dog", "cat", "other"],
+	},
+	breeds: [String],
 });
 
-const Breed = mongoose.model("Breed", breedSchema);
+const Breed = model("Breed", breedSchema);
 
-module.exports = Breed;
+export default Breed;

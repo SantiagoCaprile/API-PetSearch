@@ -1,17 +1,22 @@
-const express = require("express");
-const router = express.Router();
-const petController = require("../controllers/petController");
+import { Router } from "express";
+const router = Router();
+import {
+	createPet,
+	getAllPets,
+	getPetsBySpecies,
+	getRandomAnimals,
+} from "../controllers/petController.js";
 
 // Ruta para crear una nueva mascota
-router.post("/pets", petController.createPet);
+router.post("/pets", createPet);
 
 // Ruta para obtener la lista de mascotas
-router.get("/pets", petController.getAllPets);
+router.get("/pets", getAllPets);
 
 // Ruta para obtener todas las mascotas por especie
-router.get("/pets/:species", petController.getPetsBySpecies);
+router.get("/pets/:species", getPetsBySpecies);
 
 // Ruta para obtener 10 mascotas aleatorias
-router.get("/random-pets", petController.getRandomAnimals);
+router.get("/random-pets", getRandomAnimals);
 
-module.exports = router;
+export default router;

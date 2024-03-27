@@ -1,6 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const { sendMessage, getMessages } = require("../controllers/chatController");
+import { Router } from "express";
+const router = Router();
+import { sendMessage, getMessages } from "../controllers/chatController.js";
 
 // Route to send a message
 //router.post("/chats", sendMessage);
@@ -8,4 +8,4 @@ const { sendMessage, getMessages } = require("../controllers/chatController");
 // Route to get all messages
 //router.get("/chats", getMessages);
 
-module.exports = router;
+export default router;
