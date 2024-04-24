@@ -4,7 +4,7 @@ import User from "../models/user.js";
 // Controlador para crear un nuevo usuario
 export async function createUser(req, res) {
 	try {
-		const { email, name, password } = req.body;
+		const { email, name, password, role } = req.body;
 
 		// Verificar si el usuario ya existe en la base de datos
 		const existingUser = await User.findOne({ email });
@@ -17,6 +17,7 @@ export async function createUser(req, res) {
 			email,
 			name,
 			password,
+			role,
 		});
 
 		// Guardar el usuario en la base de datos
