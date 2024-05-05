@@ -63,6 +63,7 @@ export async function verifyCredentials(req, res) {
 			message: "Credenciales válidas",
 			user: user.name,
 			role: user.role,
+			id: user._id,
 		});
 	} catch (error) {
 		console.error("Error al verificar las credenciales", error);
