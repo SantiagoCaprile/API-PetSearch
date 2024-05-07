@@ -3,6 +3,7 @@ import Rescuer from "../models/rescuer.js";
 export async function createRescuer(req, res) {
 	try {
 		const {
+			user,
 			name,
 			contactEmail,
 			contactPhone,
@@ -12,6 +13,7 @@ export async function createRescuer(req, res) {
 		} = req.body;
 
 		const rescuer = await Rescuer.create({
+			user,
 			name,
 			contactEmail,
 			contactPhone,
@@ -19,7 +21,6 @@ export async function createRescuer(req, res) {
 			address,
 			biography,
 		});
-
 		res.status(201).json({ rescuer });
 	} catch (error) {
 		res.status(400).json({ error: error.message });
