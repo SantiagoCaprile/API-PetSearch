@@ -6,14 +6,6 @@ const rescuerSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: "User",
 		},
-		name: {
-			type: String,
-			required: [true, "Name is required"],
-		},
-		contactEmail: {
-			type: String,
-			unique: true,
-		},
 		contactPhone: {
 			type: String,
 		},
