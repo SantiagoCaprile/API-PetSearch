@@ -1,5 +1,6 @@
 // controllers/usersController.js
 import User from "../models/user.js";
+import Rescuer from "../models/rescuer.js";
 
 // Controlador para crear un nuevo usuario
 export async function createUser(req, res) {
@@ -12,7 +13,6 @@ export async function createUser(req, res) {
 			return res.status(409).json({ message: "El usuario ya existe" });
 		}
 
-		// Crear el nuevo usuario
 		const newUser = new User({
 			email,
 			name,
@@ -21,7 +21,14 @@ export async function createUser(req, res) {
 		});
 
 		// Guardar el usuario en la base de datos
-		await newUser.save();
+		const createdUser = await newUser.save()
+
+		//Si es de tipo RESCUER se crea aparte en la base de datos para vincularlo a esta cuenta.
+		if (createdUser.role === "rescuer") {
+			await Rescuer.create({
+				user: createdUser._id
+			})
+		}
 
 		res.status(201).json({ message: "Usuario creado exitosamente" });
 	} catch (error) {
