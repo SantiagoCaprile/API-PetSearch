@@ -12,9 +12,12 @@ import rescuersRouter from "./routes/rescuers.js";
 import chatsRouter from "./routes/chats.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import bodyParser from "body-parser";
 
 const app = express();
 const port = 4000;
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Conectar a la base de datos de MongoDB
 connect(process.env.DB_CONNECTION_STRING, {
