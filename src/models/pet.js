@@ -16,12 +16,10 @@ const petSchema = new Schema(
 			type: String,
 			default: "mixed",
 		},
-		age: {
-			number: Number,
-			unit: {
-				type: String,
-				enum: ["days", "weeks", "months", "years"],
-			},
+		birthDate: {
+			type: Date,
+			// date should be less than today, but allow todays date
+			// max: Date.now(),
 		},
 		description: {
 			type: String,

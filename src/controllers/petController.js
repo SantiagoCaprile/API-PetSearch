@@ -1,4 +1,37 @@
 import Pet from "../models/pet.js";
+import cloudinary from '../config/cloudinaryConfig.js'
+
+export async function createPet(req, res) {
+	try {
+		const { name, specie, breed, birthDate, description, images } = req.body;
+
+		const imageUploads = await Promise.all(images.map(async (image) => {
+
+			const uploadResponse = await cloudinary.uploader.upload(image, {
+				asset_folder: 'pets',
+				resource_type: 'image',
+				allowed_formats: ['jpg', 'jpeg', 'png'],
+			});
+			return uploadResponse.secure_url;
+		}));
+
+		const newPet = new Pet({
+			name,
+			specie,
+			breed,
+			birthDate,
+			description,
+			images: imageUploads
+		});
+
+		await newPet.save();
+		res.status(201).json(newPet);
+	} catch (error) {
+		res.status(500).json({ error: 'Error al crear la mascota.' });
+	}
+}
+
+
 
 const allowedCharacteristicTypes = [
 	"size",
@@ -11,7 +44,9 @@ const allowedCharacteristicTypes = [
 ];
 
 function validateCharacteristics(characteristics) {
-	for (const characteristic of characteristics) {
+	const characteristicsArray = Array.from(characteristics);
+
+	for (const characteristic of characteristicsArray) {
 		if (!allowedCharacteristicTypes.includes(characteristic.key)) {
 			return {
 				valid: false,
@@ -27,7 +62,6 @@ function calculateAgeRange(age) {
 	if (age.unit !== "years") {
 		return "baby";
 	}
-	//age.unit === "years"
 	if (age.number > 1 && age.number < 4) {
 		return "young";
 	}
@@ -41,86 +75,21 @@ function calculateAgeRange(age) {
 	}
 }
 
-export async function createPet(req, res) {
-	try {
-		const {
-			name,
-			species,
-			breed,
-			age,
-			description,
-			photos,
-			status,
-			user,
-			characteristics,
-		} = req.body;
-
-		// Validar las características
-		const { valid, error } = validateCharacteristics(characteristics);
-		if (!valid) {
-			console.log(error);
-			return res.status(400).json({ error });
-		}
-
-		const ageRange = calculateAgeRange(age);
-
-		const images = req.body.images.map((image) => {
-			// convert image to base64
-			const base64Image = Buffer.from(image).toString("base64");
-			return base64Image;
-		});
-
-		const newPet = new Pet({
-			name,
-			species,
-			breed,
-			images,
-			age,
-			description,
-			photos,
-			status,
-			user,
-			characteristics: [
-				...characteristics,
-				{ key: "age range", value: ageRange },
-				{
-					key: "good with cats",
-					value: Boolean(
-						characteristics.find((c) => c.key === "good with cats")?.value
-					),
-				},
-				{
-					key: "good with dogs",
-					value: Boolean(
-						characteristics.find((c) => c.key === "good with dogs")?.value
-					),
-				},
-				{
-					key: "good with kids",
-					value: Boolean(
-						characteristics.find((c) => c.key === "good with kids")?.value
-					),
-				},
-			],
-		});
-
-		await newPet.save();
-
-		res.status(201).json(newPet);
-	} catch (error) {
-		res.status(500).json({ error: "Error al crear la mascota." });
-	}
-}
-
+//this should be getAllPets and decode the images from base64 to a web format like jpeg or png
 export async function getAllPets(req, res) {
 	try {
-		const pets = await Pet.find();
+		const pets = await Pet.find().populate("user", "name email");
+		if (!pets) {
+			return res.status(404).json({ error: "No se encontraron mascotas." });
+		}
 
 		res.status(200).json(pets);
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error: "Error al obtener las mascotas." });
 	}
 }
+
 
 export async function getPetsBySpecies(req, res) {
 	try {
