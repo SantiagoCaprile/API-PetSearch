@@ -145,3 +145,15 @@ export async function getRandomAnimals(req, res) {
 			.json({ error: "Error al obtener los animales aleatorios." });
 	}
 }
+
+export async function getRescuerPets(req, res) {
+	try {
+		const { rescuerId } = req.params;
+
+		const pets = await Pet.find({ rescuer: rescuerId });
+
+		res.status(200).json(pets);
+	} catch (error) {
+		res.status(500).json({ error: "Error al obtener las mascotas del rescatista." });
+	}
+}
