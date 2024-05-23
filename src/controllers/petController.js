@@ -3,14 +3,14 @@ import cloudinary from '../config/cloudinaryConfig.js'
 
 export async function createPet(req, res) {
 	try {
-		const { name, specie, breed, birthDate, description, characteristics, images } = req.body;
+		const { name, specie, breed, birthDate, description, characteristics, images, rescuer } = req.body;
 
 		const imageUploads = await Promise.all(images.map(async (image) => {
 
 			const uploadResponse = await cloudinary.uploader.upload(image, {
 				asset_folder: 'pets',
 				resource_type: 'image',
-				allowed_formats: ['jpg', 'jpeg', 'png'],
+				allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
 			});
 			return uploadResponse.secure_url;
 		}));
@@ -23,6 +23,7 @@ export async function createPet(req, res) {
 				key: characteristic.key,
 				value: characteristic.value,
 			})),
+			rescuer: rescuer,
 			birthDate,
 			description,
 			images: imageUploads
@@ -82,7 +83,7 @@ function calculateAgeRange(age) {
 //this should be getAllPets and decode the images from base64 to a web format like jpeg or png
 export async function getAllPets(req, res) {
 	try {
-		const pets = await Pet.find().populate("user", "name email");
+		const pets = await Pet.find().populate("rescuer", "name email");
 		if (!pets) {
 			return res.status(404).json({ error: "No se encontraron mascotas." });
 		}

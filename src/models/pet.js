@@ -34,7 +34,7 @@ const petSchema = new Schema(
 			enum: ["available", "adopted", "inProgress"],
 			default: "available",
 		},
-		user: { type: Schema.Types.ObjectId, ref: "User" },
+		rescuer: { type: Schema.Types.ObjectId, ref: "User" },
 		characteristics: [
 			{
 				key: String,
