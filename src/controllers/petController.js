@@ -157,3 +157,18 @@ export async function getRescuerPets(req, res) {
 		res.status(500).json({ error: "Error al obtener las mascotas del rescatista." });
 	}
 }
+
+export async function getPetById(req, res) {
+	try {
+		const { petId } = req.params;
+		const pet = await Pet
+			.findById(petId)
+			.populate("rescuer", "name _id");
+		if (!pet) {
+			return res.status(404).json({ error: "No se encontró la mascota." });
+		}
+		res.status(200).json(pet);
+	} catch (error) {
+		res.status(500).json({ error: "Error al obtener la mascota." });
+	}
+}

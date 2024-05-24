@@ -5,7 +5,8 @@ import {
 	getAllPets,
 	getPetsBySpecies,
 	getRandomAnimals,
-	getRescuerPets
+	getRescuerPets,
+	getPetById,
 } from "../controllers/petController.js";
 
 // Ruta para crear una nueva mascota
@@ -18,9 +19,12 @@ router.get("/pets", getAllPets);
 router.get("/pets/rescuer/:rescuerId", getRescuerPets);
 
 // Ruta para obtener todas las mascotas por especie
-router.get("/pets/:species", getPetsBySpecies);
+// router.get("/pets/:species", getPetsBySpecies);
 
 // Ruta para obtener 10 mascotas aleatorias
 router.get("/random-pets", getRandomAnimals);
+
+// Ruta para obtener una mascota por id
+router.get("/pets/:petId", getPetById);
 
 export default router;
