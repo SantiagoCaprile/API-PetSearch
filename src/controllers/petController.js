@@ -63,64 +63,46 @@ function validateCharacteristics(characteristics) {
 	return { valid: true };
 }
 
-function calculateAgeRange(age) {
-	if (age.unit !== "years") {
-		return "baby";
-	}
-	if (age.number > 1 && age.number < 4) {
-		return "young";
-	}
-
-	if (age.number >= 4 && age.number < 8) {
-		return "adult";
-	}
-
-	if (age.number >= 8) {
-		return "senior";
-	}
-}
-
-//this should be getAllPets and decode the images from base64 to a web format like jpeg or png
+// this function will get all the pets from the database and return them
+// but can also filter them by specie, age range, size, sex
+// if the filters are not provided, it will return all the pets
 export async function getAllPets(req, res) {
 	try {
-		const pets = await Pet.find().populate("rescuer", "name email");
-		if (!pets) {
-			return res.status(404).json({ error: "No se encontraron mascotas." });
+		//the filters are in the body of the request
+		const { age
+			, specie
+			, size
+			, sex } = req.query;
+		// if there are no filters, return all the pets
+		if (!age && !specie && !size && !sex) {
+			const pets = await Pet.find().populate("rescuer", "name _id");
+			return res.status(200).json(pets);
 		}
+		// age can be an array with multiple values
+		// so we need to iterate over all the values and convert them to a date range
+		let ageRange = null;
+		if (age) {
+			const ages = Array.isArray(age) ? age : [age];
+			ageRange = ages.map(Pet.ageRangeToDateRange);
+		}
+		const pets = await Pet.find({
+			$and: [
+				ageRange ? {
+					$or: ageRange.map(range => ({ birthDate: { $gte: range.start, $lte: range.end } }))
+				} : null,
+				specie ? { specie } : {},
+				size ? { size } : {},
+				sex ? { sex } : {},
+			],
+		});
 
+		if (!pets.length) {
+			return res.status(404).json([]);
+		}
 		res.status(200).json(pets);
+
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ error: "Error al obtener las mascotas." });
-	}
-}
-
-
-export async function getPetsBySpecies(req, res) {
-	try {
-		const { species } = req.params;
-		const { filters } = req.query;
-
-		let filterObj = {};
-
-		// Verificar si se proporcionaron filtros
-		if (filters) {
-			const filtersArray = filters.split(",");
-
-			// Aplicar los filtros a filterObj
-			filtersArray.forEach((filter) => {
-				const [key, value] = filter.split(":");
-				filterObj[`characteristics.${key}`] = value;
-			});
-		}
-
-		const pets = await Pet.find({ species, ...filterObj }).populate("user");
-
-		res.status(200).json(pets);
-	} catch (error) {
-		res
-			.status(500)
-			.json({ error: "Error al obtener las mascotas por especie." });
 	}
 }
 

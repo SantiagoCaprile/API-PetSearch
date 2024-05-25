@@ -3,7 +3,6 @@ const router = Router();
 import {
 	createPet,
 	getAllPets,
-	getPetsBySpecies,
 	getRandomAnimals,
 	getRescuerPets,
 	getPetById,
@@ -17,9 +16,6 @@ router.get("/pets", getAllPets);
 
 // Ruta para obtener las mascotas de un rescatista
 router.get("/pets/rescuer/:rescuerId", getRescuerPets);
-
-// Ruta para obtener todas las mascotas por especie
-// router.get("/pets/:species", getPetsBySpecies);
 
 // Ruta para obtener 10 mascotas aleatorias
 router.get("/random-pets", getRandomAnimals);
