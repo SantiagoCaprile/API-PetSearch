@@ -12,10 +12,13 @@ const rescuerSchema = new Schema(
 		socialMediasLinks: {
 			type: [String],
 		},
+		city: {
+			type: String,
+		},
 		address: {
 			type: String,
 		},
-		biography: {
+		bio: {
 			type: String,
 		},
 		pets: {

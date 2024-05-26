@@ -29,7 +29,7 @@ export async function createRescuer(req, res) {
 
 export async function getRescuers(req, res) {
 	try {
-		const rescuers = await Rescuer.find();
+		const rescuers = await Rescuer.find().populate("user", "name email");
 		res.status(200).json({ rescuers });
 	} catch (error) {
 		res.status(400).json({ error: error.message });
@@ -38,7 +38,10 @@ export async function getRescuers(req, res) {
 
 export async function getRescuerById(req, res) {
 	try {
-		const rescuer = await Rescuer.findById(req.params.id);
+		//this will find by user id in the rescuer model
+		const { id } = req.params;
+		const rescuer = await Rescuer.findOne({ user: id })
+			.populate("user", "name email")
 		res.status(200).json({ rescuer });
 	} catch (error) {
 		res.status(400).json({ error: error.message });
