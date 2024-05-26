@@ -10,7 +10,7 @@ export async function createPet(req, res) {
 			const uploadResponse = await cloudinary.uploader.upload(image, {
 				asset_folder: 'pets',
 				resource_type: 'image',
-				allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+				allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
 			});
 			return uploadResponse.secure_url;
 		}));
