@@ -71,8 +71,8 @@ export async function getAllPets(req, res) {
 		//the filters are in the body of the request
 		const { age
 			, specie
-			, size
-			, sex } = req.query;
+			, size,
+			sex } = req.query
 		// if there are no filters, return all the pets
 		if (!age && !specie && !size && !sex) {
 			const pets = await Pet.find().populate("rescuer", "name _id");
@@ -80,21 +80,31 @@ export async function getAllPets(req, res) {
 		}
 		// age can be an array with multiple values
 		// so we need to iterate over all the values and convert them to a date range
+		const filters = []; //array to store the filters
+
 		let ageRange = null;
 		if (age) {
 			const ages = Array.isArray(age) ? age : [age];
 			ageRange = ages.map(Pet.ageRangeToDateRange);
+			filters.push({
+				$or: ageRange.map(range => ({
+					birthDate: { $gte: range.start, $lte: range.end }
+				}))
+			});
 		}
-		const pets = await Pet.find({
-			$and: [
-				ageRange ? {
-					$or: ageRange.map(range => ({ birthDate: { $gte: range.start, $lte: range.end } }))
-				} : null,
-				specie ? { specie } : {},
-				size ? { size } : {},
-				sex ? { sex } : {},
-			],
-		});
+		if (specie) {
+			filters.push({ specie });
+		}
+		if (size) {
+			filters.push({ size });
+		}
+		if (sex) {
+			filters.push({ sex });
+		}
+		// Búsqueda en la base de datos
+		const query = filters.length > 0 ? { $and: filters } : {};
+		console.log('query:', query);
+		const pets = await Pet.find(query);
 
 		if (!pets.length) {
 			return res.status(404).json([]);
@@ -102,6 +112,7 @@ export async function getAllPets(req, res) {
 		res.status(200).json(pets);
 
 	} catch (error) {
+		console.error("Error al obtener las mascotas", error);
 		res.status(500).json({ error: "Error al obtener las mascotas." });
 	}
 }
