@@ -3,7 +3,7 @@ import cloudinary from '../config/cloudinaryConfig.js'
 
 export async function createPet(req, res) {
 	try {
-		const { name, specie, breed, birthDate, description, characteristics, images, rescuer } = req.body;
+		const { name, specie, breed, birthDate, description, characteristics, sex, size, images, rescuer } = req.body;
 
 		const imageUploads = await Promise.all(images.map(async (image) => {
 
@@ -23,6 +23,8 @@ export async function createPet(req, res) {
 				key: characteristic.key,
 				value: characteristic.value,
 			})),
+			sex,
+			size,
 			rescuer: rescuer,
 			birthDate,
 			description,
