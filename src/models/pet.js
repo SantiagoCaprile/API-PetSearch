@@ -12,6 +12,14 @@ const petSchema = new Schema(
 			required: true,
 			enum: ["dog", "cat", "other"],
 		},
+		sex: {
+			type: String,
+			enum: ["male", "female"],
+		},
+		size: {
+			type: String,
+			enum: ["small", "medium", "large"],
+		},
 		breed: {
 			type: String,
 			default: "mixed",
