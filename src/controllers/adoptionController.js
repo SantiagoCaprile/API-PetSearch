@@ -66,7 +66,9 @@ export async function getAllAdoptionByRescuer(req, res) {
 export async function getAdoptionFormById(req, res) {
 	try {
 		const { id } = req.params;
-		const adoption = await Adoption.findById(id);
+		const adoption = await Adoption.findById(id)
+			.populate("pet", ["_id", "name", "images", "breed", "birthDate"])
+			.populate("user", ["_id", "name", "email", "contactPhone"]);
 		res.status(200).json({ adoption });
 	} catch (error) {
 		res.status(400).json({ error: error.message });
