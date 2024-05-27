@@ -10,7 +10,7 @@ const adoptionSchema = new Schema(
 		homeType: { type: String, required: true },
 		allowed: { type: Boolean, required: true },
 		alergies: { type: Boolean, required: true },
-		hadPets: { type: Boolean, required: true },
+		hadPets: { type: String, required: true },
 		areSterilized: { type: Boolean },
 		tellMoreAboutPets: { type: String, maxlength: 700 },
 		inWorstCase: { type: String, required: true },

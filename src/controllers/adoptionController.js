@@ -1,10 +1,10 @@
 import Adoption from "../models/adoptionForm.js";
+import Pet from "../models/pet.js";
 
 export async function createAdoptionForm(req, res) {
 	try {
 		const {
 			user,
-			rescuer,
 			pet,
 			responsable,
 			incomeMoney,
@@ -17,10 +17,10 @@ export async function createAdoptionForm(req, res) {
 			inWorstCase,
 			whyAdopt,
 		} = req.body;
-
+		const rescuePet = await Pet.findById(pet).select('rescuer');
 		const adoption = await Adoption.create({
 			user,
-			rescuer,
+			rescuer: rescuePet.rescuer,
 			pet,
 			responsable,
 			incomeMoney,
@@ -33,9 +33,9 @@ export async function createAdoptionForm(req, res) {
 			inWorstCase,
 			whyAdopt,
 		});
-
 		res.status(201).json({ adoption });
 	} catch (error) {
+		console.error("Error al crear el formulario de adopción", error);
 		res.status(400).json({ error: error.message });
 	}
 }
