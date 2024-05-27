@@ -12,10 +12,10 @@ import {
 router.post("/adoption-forms", createAdoptionForm);
 
 // Ruta para obtener la lista de formularios de adopción del usuario
-router.get("/adoption-forms-user/:id", getAllAdoptionByUser);
+router.get("/adoption-forms/user/:id", getAllAdoptionByUser);
 
 // Ruta para obtener la lista de formularios de adopción del rescatista
-router.get("/adoption-forms", getAllAdoptionByRescuer);
+router.get("/adoption-forms/rescuer/:id", getAllAdoptionByRescuer);
 
 // Ruta para obtener un formulario de adopción por id
 router.get("/adoption-forms/:id", getAdoptionFormById);

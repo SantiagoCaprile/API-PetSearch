@@ -43,8 +43,8 @@ export async function createAdoptionForm(req, res) {
 export async function getAllAdoptionByUser(req, res) {
 	try {
 		const { id } = req.params;
-		const adoption = await Adoption.find({ user: id });
-		res.status(200).json(adoption ? adoption : []);
+		const adoptions = await Adoption.find({ user: id });
+		res.status(200).json(adoptions ? adoptions : []);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
@@ -53,8 +53,11 @@ export async function getAllAdoptionByUser(req, res) {
 export async function getAllAdoptionByRescuer(req, res) {
 	try {
 		const { id } = req.params;
-		const adoption = await Adoption.find({ rescuer: id });
-		res.status(200).json({ adoption });
+
+		const adoptions = await Adoption.find({ rescuer: id })
+			.populate("pet", ["name", "images", "breed"])
+			.populate("user", "name");
+		res.status(200).json(adoptions ? adoptions : []);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
