@@ -43,7 +43,9 @@ export async function createAdoptionForm(req, res) {
 export async function getAllAdoptionByUser(req, res) {
 	try {
 		const { id } = req.params;
-		const adoptions = await Adoption.find({ user: id });
+		const adoptions = await Adoption.find({ user: id })
+			.populate("pet", ["name", "images", "breed"])
+			.populate("user", "name");
 		res.status(200).json(adoptions ? adoptions : []);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
