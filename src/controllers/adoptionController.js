@@ -92,3 +92,13 @@ export async function reviewAdoptionForm(req, res) {
 		res.status(400).json({ error: error.message });
 	}
 }
+
+export async function hasSentAdoptionForm(req, res) {
+	try {
+		const { userId, petId } = req.params;
+		const adoption = await Adoption.findOne({ user: userId, pet: petId }).select('_id');
+		res.status(200).json(adoption ? true : false);
+	} catch (error) {
+		res.status(400).json({ error: error.message });
+	}
+}

@@ -6,6 +6,7 @@ import {
 	getAllAdoptionByRescuer,
 	getAdoptionFormById,
 	reviewAdoptionForm,
+	hasSentAdoptionForm
 } from "../controllers/adoptionController.js";
 
 // Ruta para crear un nuevo formulario de adopción
@@ -19,6 +20,9 @@ router.get("/adoption-forms/rescuer/:id", getAllAdoptionByRescuer);
 
 // Ruta para obtener un formulario de adopción por id
 router.get("/adoption-forms/:id", getAdoptionFormById);
+
+// Ruta para verificar si un usuario ya tiene un formulario de adopcion con esa mascota
+router.get("/adoption-forms/:userId/:petId", hasSentAdoptionForm);
 
 // Ruta para dar resultado a un formulario de adopción -> aprobar o rechazar
 router.put("/adoption-forms/:id", reviewAdoptionForm);
