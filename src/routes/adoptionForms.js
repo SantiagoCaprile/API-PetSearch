@@ -25,6 +25,7 @@ router.get("/adoption-forms/:id", getAdoptionFormById);
 router.get("/adoption-forms/:userId/:petId", hasSentAdoptionForm);
 
 // Ruta para dar resultado a un formulario de adopción -> aprobar o rechazar
+//tambien se va a usar en caso que el usuario quiera retirar su solicitud
 router.put("/adoption-forms/:id", reviewAdoptionForm);
 
 export default router;
