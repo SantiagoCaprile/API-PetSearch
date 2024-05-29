@@ -17,7 +17,7 @@ const adoptionSchema = new Schema(
 		whyAdopt: { type: String, required: true, maxlength: 700 },
 		result: {
 			type: String,
-			enum: ["pending", "on review", "approved", "denied", "retired"],
+			enum: ["pending", "on review", "approved", "denied", "cancelled"],
 			default: "pending",
 		},
 	},
