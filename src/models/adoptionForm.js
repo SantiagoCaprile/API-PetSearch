@@ -5,6 +5,7 @@ const adoptionSchema = new Schema(
 		pet: { type: Schema.Types.ObjectId, ref: "Pet" },
 		user: { type: Schema.Types.ObjectId, ref: "User" },
 		rescuer: { type: Schema.Types.ObjectId, ref: "Rescuer" },
+		chat: { type: Schema.Types.ObjectId, ref: "Chat" },
 		responsable: { type: Boolean, required: true },
 		incomeMoney: { type: Boolean, required: true },
 		homeType: { type: String, required: true },

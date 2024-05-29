@@ -1,5 +1,6 @@
 import Adoption from "../models/adoptionForm.js";
 import Pet from "../models/pet.js";
+import { Chat } from "../models/chat.js";
 
 export async function createAdoptionForm(req, res) {
 	try {
@@ -18,7 +19,11 @@ export async function createAdoptionForm(req, res) {
 			whyAdopt,
 		} = req.body;
 		const rescuePet = await Pet.findById(pet).select('rescuer');
+		const chat = await Chat.create({
+			messages: [],
+		});
 		const adoption = await Adoption.create({
+			chat: chat._id,
 			user,
 			rescuer: rescuePet.rescuer,
 			pet,
@@ -33,7 +38,11 @@ export async function createAdoptionForm(req, res) {
 			inWorstCase,
 			whyAdopt,
 		});
+		chat.adoptionForm = adoption._id;
+		await chat.save();
 		res.status(201).json({ adoption });
+		// Create a chat for the user and the rescuer
+
 	} catch (error) {
 		console.error("Error al crear el formulario de adopción", error);
 		res.status(400).json({ error: error.message });
@@ -71,6 +80,13 @@ export async function getAdoptionFormById(req, res) {
 		const adoption = await Adoption.findById(id)
 			.populate("pet", ["_id", "name", "images", "breed", "birthDate"])
 			.populate("user", ["_id", "name", "email", "contactPhone"]);
+		// if (!Chat.findOne({ adoptionForm: adoption._id })) {
+		// 	const chat = await Chat.create({
+		// 		adoptionForm: adoption._id,
+		// 		messages: [],
+		// 	});
+		// 	console.log(chat);
+		// }
 		res.status(200).json({ adoption });
 	} catch (error) {
 		res.status(400).json({ error: error.message });

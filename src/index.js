@@ -65,13 +65,12 @@ io.on("connection", (socket) => {
 
 	socket.on("join", async ({ chatId }) => {
 		console.log("joined chat", chatId);
-		socket.join("652f1f635881ff1813b9aae5");
+		socket.join(chatId);
 		// i should send all the messages in the chat
 
-		await Chat.findById("652f1f635881ff1813b9aae5")
+		await Chat.findById(chatId)
 			.populate("messages")
 			.then((chat) => {
-				console.log(chat);
 				if (chat) socket.emit("allMessages", chat.messages);
 			});
 	});
@@ -82,14 +81,15 @@ io.on("connection", (socket) => {
 		// -> falta agregar todo lo de los USERS CUANDO HAYA AUTH
 		try {
 			// Encuentra el chat o créalo si no existe aún
-			let chat = await Chat.findOne({ _id: "652f1f635881ff1813b9aae5" }); //data.chatId
+			let chat = await Chat.findById(data.chatId)
 
 			if (!chat) {
 				// Si no existe el chat, créalo
-				const newChat = new Chat({
-					messages: [],
-				});
-				chat = await newChat.save();
+				// const newChat = new Chat({
+				// 	messages: [],
+				// });
+				// chat = await newChat.save();
+				throw new Error("Chat no encontrado");
 			}
 
 			// Crea un nuevo mensaje y guárdalo en el chat
