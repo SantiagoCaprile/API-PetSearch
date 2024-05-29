@@ -61,10 +61,7 @@ const io = new Server(server, {
 });
 import { Message, Chat } from "./models/chat.js";
 io.on("connection", (socket) => {
-	console.log("a user connected");
-
 	socket.on("join", async ({ chatId }) => {
-		console.log("joined chat", chatId);
 		socket.join(chatId);
 		// i should send all the messages in the chat
 
