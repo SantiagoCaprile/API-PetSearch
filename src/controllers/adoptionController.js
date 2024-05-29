@@ -1,6 +1,7 @@
 import Adoption from "../models/adoptionForm.js";
 import Pet from "../models/pet.js";
 import { Chat } from "../models/chat.js";
+import Rescuer from "../models/rescuer.js";
 
 export async function createAdoptionForm(req, res) {
 	try {
@@ -77,9 +78,19 @@ export async function getAllAdoptionByRescuer(req, res) {
 export async function getAdoptionFormById(req, res) {
 	try {
 		const { id } = req.params;
-		const adoption = await Adoption.findById(id)
+		const adoption = await Adoption.findOne({ _id: id })
 			.populate("pet", ["_id", "name", "images", "breed", "birthDate"])
-			.populate("user", ["_id", "name", "email", "contactPhone"]);
+			.populate("user", ["_id", "name", "email", "contactPhone"])
+
+		const rescuer = await Rescuer.findOne({ user: adoption.rescuer })
+			.select('_id user') // Selecciona los campos _id y user del rescuer
+			.populate({
+				path: 'user',
+				select: 'name email contactPhone' // Selecciona solo los campos necesarios del usuario
+			});
+
+		adoption.rescuer = rescuer;
+
 		// if (!Chat.findOne({ adoptionForm: adoption._id })) {
 		// 	const chat = await Chat.create({
 		// 		adoptionForm: adoption._id,
