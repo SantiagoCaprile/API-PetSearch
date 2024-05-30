@@ -10,7 +10,15 @@ const rescuerSchema = new Schema(
 			type: String,
 		},
 		socialMediasLinks: {
-			type: [String],
+			facebook: {
+				type: String,
+			},
+			instagram: {
+				type: String,
+			},
+			twitter: {
+				type: String,
+			},
 		},
 		city: {
 			type: String,
