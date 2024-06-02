@@ -5,6 +5,7 @@ import {
 	createUser,
 	getUsers,
 	verifyCredentials,
+	getUserById,
 } from "../controllers/usersController.js";
 
 // Ruta para crear un nuevo usuario
@@ -15,5 +16,8 @@ router.get("/users", getUsers);
 
 // Ruta para verificar las credenciales de un usuario
 router.post("/users/verify", verifyCredentials);
+
+// Ruta para obtener la informacion del usuario y ver su perfil
+router.get("/users/:id", getUserById);
 
 export default router;

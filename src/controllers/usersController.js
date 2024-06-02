@@ -77,3 +77,19 @@ export async function verifyCredentials(req, res) {
 		res.status(500).json({ message: "Error al verificar las credenciales" });
 	}
 }
+
+// Controlador para obtener la informacion del usuario y ver su perfil
+export async function getUserById(req, res) {
+	try {
+		const { id } = req.params;
+		const user = await User.findById(id, "-password");
+		if (!user) {
+			return res.status(404).json({ message: "Usuario no encontrado" });
+		}
+		console.log("user:", user);
+		res.status(200).json(user);
+	} catch (error) {
+		console.error("Error al obtener el usuario", error);
+		res.status(500).json({ message: "Error al obtener el usuario" });
+	}
+}
