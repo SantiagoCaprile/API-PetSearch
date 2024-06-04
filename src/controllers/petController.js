@@ -105,7 +105,6 @@ export async function getAllPets(req, res) {
 		}
 		// Búsqueda en la base de datos
 		const query = filters.length > 0 ? { $and: filters } : {};
-		console.log('query:', query);
 		const pets = await Pet.find(query);
 
 		if (!pets.length) {

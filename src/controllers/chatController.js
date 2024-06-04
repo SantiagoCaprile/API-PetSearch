@@ -7,7 +7,6 @@ export async function sendMessage(req, res) {
 		// Get the chat ID, user ID, and message text from the request body
 		const { text } = req.body;
 
-		console.log(chat);
 		const chat = await Chat.create({
 			messages: [new Message({ body: text })],
 		});

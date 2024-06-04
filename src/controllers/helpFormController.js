@@ -35,7 +35,6 @@ export async function createHelpForm(req, res) {
             return res.status(500).json({ message: error.message });
         });
     } catch (error) {
-        console
         return res.status(500).json({ message: error.message });
     }
 }

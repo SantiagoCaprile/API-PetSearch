@@ -37,11 +37,6 @@ app.get("/", (req, res) => {
 	res.send("PING!");
 });
 
-// Iniciar el servidor
-// app.listen(port, () => {
-//   console.log(`Servidor iniciado en http://localhost:${port}`);
-// });
-
 // Middleware para permitir solicitudes desde cualquier origen
 app.use(cors());
 
@@ -75,14 +70,12 @@ io.on("connection", (socket) => {
 
 	socket.on("message", async (data) => {
 		// data = { chatId, body, time, user }
-		// -> CAMBIAR CUANDO ENTREMOS A LA SOLICITUD, VAS A TENER QUE AGREGARLO A LA DATA QUE RESCATE EL chatId DEL FORMULARIO
-		// -> falta agregar todo lo de los USERS CUANDO HAYA AUTH
 		try {
 			// Encuentra el chat o créalo si no existe aún
 			let chat = await Chat.findById(data.chatId)
 
 			if (!chat) {
-				// Si no existe el chat, créalo
+				// Si no existe el chat, quizas deberia crearlo
 				// const newChat = new Chat({
 				// 	messages: [],
 				// });
@@ -100,7 +93,7 @@ io.on("connection", (socket) => {
 			chat.messages.push(newMessage);
 			await chat.save();
 
-			// Emit the message to all sockets except the one that sent the message
+			// Emite el mensaje a todos los usuarios en la sala del chat
 			socket.broadcast.to(chat._id.toString()).emit("message", newMessage);
 		} catch (error) {
 			console.error("Error al guardar el mensaje:", error);
@@ -108,7 +101,6 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("disconnect", () => {
-		console.log("user disconnected");
 		socket.leaveAll();
 		console.log("user disconnected from all rooms");
 	});

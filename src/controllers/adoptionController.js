@@ -90,22 +90,14 @@ export async function getAdoptionFormById(req, res) {
 			});
 
 		adoption.rescuer = rescuer;
-
-		// if (!Chat.findOne({ adoptionForm: adoption._id })) {
-		// 	const chat = await Chat.create({
-		// 		adoptionForm: adoption._id,
-		// 		messages: [],
-		// 	});
-		// 	console.log(chat);
-		// }
 		res.status(200).json({ adoption });
 	} catch (error) {
 		res.status(400).json({ error: error.message });
 	}
 }
 
+// function to update the adoption form result
 export async function reviewAdoptionForm(req, res) {
-	// can be used to update the adoption form result
 	try {
 		const { id } = req.params;
 		const adoption = await Adoption.findById(id);
@@ -120,6 +112,8 @@ export async function reviewAdoptionForm(req, res) {
 	}
 }
 
+// verify if the user has sent an adoption form for a pet
+// TODO: maybe should check if the adoption status is not rejected or accepted too 
 export async function hasSentAdoptionForm(req, res) {
 	try {
 		const { userId, petId } = req.params;

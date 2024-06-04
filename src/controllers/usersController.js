@@ -65,7 +65,6 @@ export async function verifyCredentials(req, res) {
 			return res.status(401).json({ message: "Credenciales inválidas" });
 		}
 		// Credenciales válidas
-		console.log("user:", user);
 		res.status(200).json({
 			message: "Credenciales válidas",
 			user: user.name,
@@ -86,7 +85,6 @@ export async function getUserById(req, res) {
 		if (!user) {
 			return res.status(404).json({ message: "Usuario no encontrado" });
 		}
-		console.log("user:", user);
 		res.status(200).json(user);
 	} catch (error) {
 		console.error("Error al obtener el usuario", error);
