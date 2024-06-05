@@ -56,15 +56,18 @@ export function getHelpFormsByUserId(req, res) {
 export function getHelpFormByCity(req, res) {
     try {
         const city = req.params.city;
+        console.log(city);
         HelpForm.find({
-            "location.city": city
-        }, (err, helpForms) => {
-            if (err) {
-                return res.status(500).json({ message: err });
-            }
-            return res.status(200).json(helpForms);
-        });
+            "location.city": city,
+        })
+            .then((helpForms) => {
+                return res.status(200).json(helpForms);
+            })
+            .catch((error) => {
+                return res.status(500).json({ message: error.message });
+            });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: error.message });
     }
 }
