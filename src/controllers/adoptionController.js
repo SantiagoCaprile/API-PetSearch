@@ -123,3 +123,20 @@ export async function hasSentAdoptionForm(req, res) {
 		res.status(400).json({ error: error.message });
 	}
 }
+
+// function to delete all the adoptions from a user
+// also deletes the chat associated with the adoption
+// can be used when the user deletes his account
+export async function DeleteAllAdoptionFormsFromUser(userId) {
+	try {
+		const adoptions = await Adoption.find({ user: userId });
+		const chats = adoptions.map(async adoption => {
+			await Chat.deleteOne({ _id: adoption.chat });
+		});
+		await Promise.all(chats);
+		await Adoption.deleteMany({ user: userId });
+		console.log('All adoptions deleted');
+	} catch (error) {
+		console.error('Error deleting adoptions', error);
+	}
+}
