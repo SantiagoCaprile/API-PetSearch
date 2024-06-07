@@ -1,4 +1,5 @@
 import Rescuer from "../models/rescuer.js";
+import cloudinary from '../config/cloudinaryConfig.js'
 
 export async function createRescuer(req, res) {
 	try {
@@ -9,7 +10,7 @@ export async function createRescuer(req, res) {
 			contactPhone,
 			socialMediasLinks,
 			address,
-			biography,
+			bio,
 		} = req.body;
 
 		const rescuer = await Rescuer.create({
@@ -19,7 +20,7 @@ export async function createRescuer(req, res) {
 			contactPhone,
 			socialMediasLinks,
 			address,
-			biography,
+			bio,
 		});
 		res.status(201).json({ rescuer });
 	} catch (error) {
@@ -52,29 +53,41 @@ export async function updateRescuer(req, res) {
 	try {
 		const { id } = req.params;
 		const {
-			name,
-			contactEmail,
-			contactPhone,
-			socialMediasLinks,
-			address,
-			biography,
+			contactPhone,//
+			socialMediasLinks,//
+			//profilePic,//
+			city,//
+			bio,//
 		} = req.body;
+		console.log(req.body);
 
-		const rescuer = await Rescuer.findByIdAndUpdate(
-			id,
+		// let uploadImgUrl
+		// try {
+		// 	const uploadResponse = await cloudinary.v2.uploader
+		// 		.upload(image, {
+		// 			folder: 'profilePics',
+		// 			resource_type: 'image',
+		// 			allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
+		// 		});
+		// 	uploadImgUrl = uploadResponse.secure_url;
+		// } catch (error) {
+		// 	console.log(error);
+		// 	return res.status(500).json({ message: error.message });
+		// }
+
+		const rescuer = await Rescuer.updateOne(
+			{ user: id },
 			{
-				name,
-				contactEmail,
 				contactPhone,
 				socialMediasLinks,
-				address,
-				biography,
-			},
-			{ new: true }
+				//profilePic: uploadImgUrl,
+				city,
+				bio,
+			}
 		);
-
 		res.status(200).json({ rescuer });
 	} catch (error) {
+		console.log(error);
 		res.status(400).json({ error: error.message });
 	}
 }
