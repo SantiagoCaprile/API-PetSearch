@@ -21,6 +21,9 @@ const userSchema = new Schema(
 			default: "user",
 			enum: ["user", "admin", "rescuer"],
 		},
+		profilePic: {
+			type: String,
+		},
 	},
 	{
 		timestamps: true,
