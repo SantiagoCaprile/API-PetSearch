@@ -19,6 +19,9 @@ export async function createAdoptionForm(req, res) {
 			inWorstCase,
 			whyAdopt,
 		} = req.body;
+		if (await userHasSentAdoptionForm(user, pet)) {
+			return res.status(400).json({ error: 'User has already sent an adoption form for this pet' });
+		}
 		const rescuePet = await Pet.findById(pet).select('rescuer');
 		const chat = await Chat.create({
 			messages: [],
@@ -139,4 +142,11 @@ export async function DeleteAllAdoptionFormsFromUser(userId) {
 	} catch (error) {
 		console.error('Error deleting adoptions', error);
 	}
+}
+
+// function to check if the user has an adoption form for a pet
+// if it has, also should check if the adoption status is not pending, on review or cancelled
+const userHasSentAdoptionForm = async (userId, petId) => {
+	const adoption = await Adoption.findOne({ user: userId, pet: petId, result: { $nin: ['pending', 'on review', 'cancelled'] } });
+	return adoption ? true : false;
 }
