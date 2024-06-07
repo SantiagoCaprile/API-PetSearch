@@ -32,7 +32,7 @@ export async function createRescuer(req, res) {
 export async function getRescuers(req, res) {
 	try {
 		const rescuers = await Rescuer.find()
-			.populate("user", "name email");
+			.populate("user", "name email profilePic");
 		res.status(200).json({ rescuers });
 	} catch (error) {
 		res.status(400).json({ error: error.message });
@@ -61,7 +61,6 @@ export async function updateRescuer(req, res) {
 			city,
 			bio,
 		} = req.body;
-		console.log(req.body);
 
 		const rescuer = await Rescuer.updateOne(
 			{ user: id },
@@ -86,10 +85,18 @@ export async function updateRescuer(req, res) {
 				console.log(error);
 				return res.status(500).json({ message: error.message });
 			}
-			await User.updateOne(
-				{ _id: id },
-				{ profilePic: uploadImgUrl, }
-			);
+			User.findById(id).then(async (user) => {
+				//if there is a profile pic delete the previous
+				if (user.profilePic) {
+					const publicId = user.profilePic.split('/').pop().split('.')[0];
+					await cloudinary.v2.api
+						.delete_resources(['profilePics/' + publicId],
+							{ type: 'upload', resource_type: 'image' })
+					await User.updateOne({ _id: id }, { profilePic: uploadImgUrl })
+				} else {
+					await User.updateOne({ _id: id }, { profilePic: uploadImgUrl })
+				}
+			})
 		}
 		res.status(200).json({ rescuer });
 	} catch (error) {
