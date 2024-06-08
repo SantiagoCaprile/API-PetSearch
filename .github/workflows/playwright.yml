@@ -31,6 +31,12 @@ jobs:
           echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> $GITHUB_ENV
           echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> $GITHUB_ENV
 
+      - name: Ensure port 4000 is free
+        run: |
+          if lsof -Pi :4000 -sTCP:LISTEN -t >/dev/null ; then
+            kill -9 $(lsof -Pi :4000 -sTCP:LISTEN -t)
+          fi
+
       - name: Start server
         run: npm start &
         env:
