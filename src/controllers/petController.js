@@ -125,12 +125,12 @@ export async function getAllPets(req, res) {
 export async function getRandomAnimals(req, res) {
 	try {
 		const catAnimals = await Pet.aggregate([
-			{ $match: { species: "cat" } },
+			{ $match: { specie: "cat" } },
 			{ $sample: { size: 2 } },
 		]);
 
 		const dogAnimals = await Pet.aggregate([
-			{ $match: { species: "dog" } },
+			{ $match: { specie: "dog" } },
 			{ $sample: { size: 2 } },
 		]);
 
