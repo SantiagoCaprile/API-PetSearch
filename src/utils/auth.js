@@ -8,7 +8,8 @@ export function generateToken(user) {
     return jwt.sign(
         { id: user._id, email: user.email, role: user.role },
         secretKey,
-        { expiresIn: '1h' } // El token expira en 1 hora
+        { expiresIn: '24h' }
+        // Token expires in 24 hours like the cookie session in the frontend
     );
 }
 
