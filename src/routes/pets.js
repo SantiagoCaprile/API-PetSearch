@@ -7,9 +7,11 @@ import {
 	getRescuerPets,
 	getPetById,
 } from "../controllers/petController.js";
+import { authorizeRole } from "../middlewares/roleAuthMiddleware.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
 
 // Ruta para crear una nueva mascota
-router.post("/pets", createPet);
+router.post("/pets", authorizeRole("admin", "rescuer"), authenticateToken, createPet);
 
 // Ruta para obtener la lista de mascotas
 router.get("/pets", getAllPets);

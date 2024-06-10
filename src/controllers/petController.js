@@ -5,15 +5,18 @@ export async function createPet(req, res) {
 	try {
 		const { name, specie, breed, birthDate, description, characteristics, sex, size, images, rescuer } = req.body;
 
-		const imageUploads = await Promise.all(images.map(async (image) => {
+		let imageUploads = [];
+		if (images && images.length !== 0) {
+			imageUploads = await Promise.all(images.map(async (image) => {
 
-			const uploadResponse = await cloudinary.uploader.upload(image, {
-				asset_folder: 'pets',
-				resource_type: 'image',
-				allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
-			});
-			return uploadResponse.secure_url;
-		}));
+				const uploadResponse = await cloudinary.uploader.upload(image, {
+					asset_folder: 'pets',
+					resource_type: 'image',
+					allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
+				});
+				return uploadResponse.secure_url;
+			}))
+		}
 
 		const newPet = new Pet({
 			name,
@@ -34,6 +37,7 @@ export async function createPet(req, res) {
 		await newPet.save();
 		res.status(201).json(newPet);
 	} catch (error) {
+		console.error('Error al crear la mascota', error);
 		res.status(500).json({ error: 'Error al crear la mascota.' });
 	}
 }
