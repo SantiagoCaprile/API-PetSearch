@@ -1,21 +1,9 @@
 import { test, expect } from '@playwright/test';
-// const { createServer } = require('http');
-// import app from '../src/app';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config()
 
 const protectedRoute = 'http://localhost:4000/users/';
-// let server;
-
-// test.beforeAll(() => {
-//     server = createServer(app);
-//     server.listen(3000);
-// });
-
-// test.afterAll(() => {
-//     server.close();
-// });
 
 test('should allow access with valid token', async ({ request }) => {
     const token = jwt.sign({ id: 1, username: 'testuser' }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });

@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test';
+import { generateAuthJWTToken } from './utils.js';
 
 test.describe('API USER Tests', () => {
     test('GET /users should return a list of users', async ({ request }) => {
-        const response = await request.get('http://localhost:4000/users');
+        const response = await request.get('http://localhost:4000/users', {
+            headers: {
+                'authorization': 'Bearer ' + generateAuthJWTToken(),
+            },
+        });
         expect(response.ok()).toBeTruthy(); // Verifica que la respuesta sea correcta (status 200-299)
         const users = await response.json();
         expect(users).toBeInstanceOf(Array); // Verifica que la respuesta sea un array
@@ -16,10 +21,19 @@ test.describe('API USER Tests', () => {
 
 
     test('GET /users/:id should return a user by id', async ({ request }) => {
-        const response = await request.get('http://localhost:4000/users');
+        const token = generateAuthJWTToken();
+        const response = await request.get('http://localhost:4000/users', {
+            headers: {
+                'authorization': 'Bearer ' + token,
+            },
+        });
         const users = await response.json();
         const randomUser = users[Math.floor(Math.random() * users.length)];
-        const response2 = await request.get(`http://localhost:4000/users/${randomUser._id}`);
+        const response2 = await request.get(`http://localhost:4000/users/${randomUser._id}`, {
+            headers: {
+                authorization: 'Bearer ' + token,
+            },
+        });
         expect(response2.ok()).toBeTruthy(); // Verifica que la respuesta sea correcta (status 200-299)
         const user = await response2.json();
         expect(user).toHaveProperty('_id'); // Verifica que el usuario tenga una propiedad `id`
