@@ -84,15 +84,21 @@ export async function verifyCredentials(req, res) {
 
 // Controlador para obtener la informacion del usuario y ver su perfil
 export async function getUserById(req, res) {
-	try {
-		const { id } = req.params;
-		const user = await User.findById(id, "-password");
-		if (!user) {
-			return res.status(404).json({ message: "Usuario no encontrado" });
-		}
-		res.status(200).json(user);
-	} catch (error) {
-		console.error("Error al obtener el usuario", error);
-		res.status(500).json({ message: "Error al obtener el usuario" });
-	}
+	const { id } = req.params;
+	const user = await User.findById(id, "-password")
+		.then((user) => {
+			if (user) {
+				res.status(200).json(user);
+			}
+		})
+		.catch((error) => {
+			//handle error when id is invalid or user does not exist
+			if (error.name === "CastError") {
+				return res.status(500).json({ message: "ID de usuario inválido" });
+			}
+			if (error.name === "DocumentNotFoundError") {
+				return res.status(404).json({ message: "Usuario no encontrado" });
+			}
+			res.status(500).json({ message: "Error al obtener el usuario" });
+		});
 }
