@@ -6,8 +6,8 @@ import { generateToken } from "../utils/auth.js";
 // Controlador para crear un nuevo usuario
 export async function createUser(req, res) {
 	try {
-		const { email, name, password, role } = req.body;
-
+		let { email, name, password, role } = req.body;
+		email = email.toLowerCase();
 		// Verificar si el usuario ya existe en la base de datos
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
@@ -52,7 +52,8 @@ export async function getUsers(req, res) {
 // Controlador para verificar las credenciales de un usuario
 export async function verifyCredentials(req, res) {
 	try {
-		const { email, password } = req.body;
+		let { email, password } = req.body;
+		email = email.toLowerCase();
 
 		// Verificar si el usuario existe en la base de datos
 		const user = await User.findOne({ email: email });
