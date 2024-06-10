@@ -1,6 +1,7 @@
 // controllers/usersController.js
 import User from "../models/user.js";
 import Rescuer from "../models/rescuer.js";
+import { generateToken } from "../utils/auth.js";
 
 // Controlador para crear un nuevo usuario
 export async function createUser(req, res) {
@@ -65,11 +66,15 @@ export async function verifyCredentials(req, res) {
 			return res.status(401).json({ message: "Credenciales inválidas" });
 		}
 		// Credenciales válidas
+
+		// Generar un token de autenticación
+		const token = generateToken(user);
 		res.status(200).json({
 			message: "Credenciales válidas",
 			user: user.name,
 			role: user.role,
 			id: user._id,
+			token,
 		});
 	} catch (error) {
 		console.error("Error al verificar las credenciales", error);
