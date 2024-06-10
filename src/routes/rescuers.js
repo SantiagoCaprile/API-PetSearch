@@ -1,18 +1,15 @@
 import { Router } from "express";
 const router = Router();
 import {
-	createRescuer,
 	getRescuers,
 	getRescuerById,
 	updateRescuer,
-	addPetToRescuer,
-	removePetFromRescuer,
 } from "../controllers/rescuerController.js";
 import { authenticateToken } from '../middlewares/authMiddleware.js';
 import { validateApiKey } from "../middlewares/apiKeyMiddleware.js";
 
 // Ruta para crear un nuevo rescatista
-router.post("/rescuers", validateApiKey, createRescuer);
+// router.post("/rescuers", validateApiKey, createRescuer);
 
 // Ruta para obtener la lista de rescatistas
 router.get("/rescuers", validateApiKey, getRescuers);
@@ -24,9 +21,9 @@ router.get("/rescuers/:id", validateApiKey, getRescuerById);
 router.put("/rescuers/:id", validateApiKey, authenticateToken, updateRescuer);
 
 // Ruta para agregar una mascota a un rescatista
-router.post("/rescuers/:id/pets", validateApiKey, authenticateToken, addPetToRescuer);
+//router.post("/rescuers/:id/pets", validateApiKey, authenticateToken, addPetToRescuer);
 
 // Ruta para eliminar una mascota de un rescatista
-router.delete("/rescuers/:id/pets", validateApiKey, authenticateToken, removePetFromRescuer);
+//router.delete("/rescuers/:id/pets", validateApiKey, authenticateToken, removePetFromRescuer);
 
 export default router;
