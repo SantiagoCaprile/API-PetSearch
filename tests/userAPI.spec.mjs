@@ -54,11 +54,27 @@ test.describe('API USER Tests', () => {
                 'Content-Type': 'application/json',
                 'x-api-key': process.env.FRONTEND_API_KEY,
             },
-            json: user.toString(),
+            data: user
         });
         expect(response.status()).toBe(401);
         const responseBody = await response.json();
         expect(responseBody).toHaveProperty('message', 'Usuario no existe');
+    });
+
+    test('POST /users/verify should return 400 if the email or password are missing', async ({ request }) => {
+        const user = {
+            email: faker.internet.email(),
+        };
+        const response = await request.post('http://localhost:4000/users/verify', {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.FRONTEND_API_KEY,
+            },
+            data: user
+        });
+        expect(response.status()).toBe(400);
+        const responseBody = await response.json();
+        expect(responseBody).toHaveProperty('message', 'Faltan campos obligatorios');
     });
 
 });

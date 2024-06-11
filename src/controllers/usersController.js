@@ -55,6 +55,11 @@ export async function verifyCredentials(req, res) {
 		let { email, password } = req.body;
 		email = email.toLowerCase();
 
+		// Verificar si los campos obligatorios fueron enviados
+		if (!email || !password) {
+			return res.status(400).json({ message: "Faltan campos obligatorios" });
+		}
+
 		// Verificar si el usuario existe en la base de datos
 		const user = await User.findOne({ email: email });
 		if (!user) {
