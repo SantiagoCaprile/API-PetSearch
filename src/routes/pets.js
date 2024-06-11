@@ -6,6 +6,7 @@ import {
 	getRandomAnimals,
 	getRescuerPets,
 	getPetById,
+	editPet,
 } from "../controllers/petController.js";
 import { authorizeRole } from "../middlewares/roleAuthMiddleware.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
@@ -25,5 +26,8 @@ router.get("/pets/random", validateApiKey, getRandomAnimals);
 
 // Ruta para obtener una mascota por id
 router.get("/pets/:petId", validateApiKey, getPetById);
+
+// Ruta para editar una mascota
+router.put("/pets/:petId", authorizeRole("admin", "rescuer"), authenticateToken, editPet);
 
 export default router;

@@ -170,3 +170,30 @@ export async function getPetById(req, res) {
 		res.status(500).json({ error: "Error al obtener la mascota." });
 	}
 }
+
+export async function editPet(req, res) {
+	try {
+		const { petId } = req.params;
+		const newPet = req.body;
+
+		const pet = await Pet.findById(petId);
+		if (!pet) {
+			return res.status(404).json({ error: "No se encontró la mascota." });
+		}
+
+		// la edicion de imagenes la vamos a implementar mas tarde
+		Object.keys(newPet).forEach((key) => {
+			if (key === "images") return;
+
+			pet[key] = newPet[key];
+		});
+
+		await pet.save();
+		res.status(200).json(pet);
+	} catch (error) {
+		console.error("Error al editar la mascota", error);
+		res.status(500).json({ error: "Error al editar la mascota." });
+	}
+}
+
+
