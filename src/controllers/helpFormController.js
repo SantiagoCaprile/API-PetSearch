@@ -56,7 +56,6 @@ export function getHelpFormsByUserId(req, res) {
 export function getHelpFormByCity(req, res) {
     try {
         const city = req.params.city;
-        console.log(city);
         HelpForm.find({
             "location.city": city,
         })
