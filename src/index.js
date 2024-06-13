@@ -35,7 +35,19 @@ app.get("/", (req, res) => {
 });
 
 // Middleware para permitir solicitudes desde cualquier origen
-app.use(cors());
+const allowedOrigins = ['http://149.50.139.178:3000', 'http://localhost:3000/'];
+
+const corsOptions = {
+	origin: function (origin, callback) {
+		if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+			callback(null, true);
+		} else {
+			callback(new Error('Not allowed by CORS'));
+		}
+	},
+	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 // Middleware para analizar el cuerpo de las solicitudes
 app.use(json());
