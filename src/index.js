@@ -21,10 +21,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Conectar a la base de datos de MongoDB
-connect(process.env.DB_CONNECTION_STRING, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-})
+connect(process.env.DB_CONNECTION_STRING)
 	.then(() => {
 		console.log("Conexión exitosa a la base de datos");
 	})
@@ -45,6 +42,12 @@ app.use(json());
 
 // Middleware para registrar las solicitudes que llegan al servidor
 app.use(morgan("dev"));
+
+// To serve static files
+import path from "path";
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Socket.io para chats en tiempo real. Se crea un websocket en el servidor
 const server = createServer(app);
@@ -77,7 +80,7 @@ io.on("connection", (socket) => {
 			if (!chat) {
 				// Si no existe el chat, quizas deberia crearlo
 				// const newChat = new Chat({
-				// 	messages: [],
+				//  messages: [],
 				// });
 				// chat = await newChat.save();
 				throw new Error("Chat no encontrado");

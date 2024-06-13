@@ -1,21 +1,32 @@
+import fs from 'fs';
 import Pet from "../models/pet.js";
-import cloudinary from '../config/cloudinaryConfig.js'
+// import cloudinary from '../config/cloudinaryConfig.js'
+import path from 'path'; // Asegúrate de que la ruta sea correcta
+const __dirname = path.resolve(); // Asegúrate de que la ruta sea correcta
 
 export async function createPet(req, res) {
 	try {
 		const { name, specie, breed, birthDate, description, characteristics, sex, size, images, rescuer } = req.body;
 
-		let imageUploads = [];
+		let imagePaths = [];
 		if (images && images.length !== 0) {
-			imageUploads = await Promise.all(images.map(async (image) => {
+			const uploadDirectory = path.join(__dirname, 'uploads', 'pets'); // Ruta donde se guardarán las imágenes
 
-				const uploadResponse = await cloudinary.uploader.upload(image, {
-					asset_folder: 'pets',
-					resource_type: 'image',
-					allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
-				});
-				return uploadResponse.secure_url;
-			}))
+			// Crear la carpeta si no existe
+			if (!fs.existsSync(uploadDirectory)) {
+				fs.mkdirSync(uploadDirectory, { recursive: true });
+			}
+
+			imagePaths = await Promise.all(images.map(async (image, index) => {
+				const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+				const buffer = Buffer.from(base64Data, 'base64');
+				const imageName = `${Date.now()}-${index}.jpg`;
+				const imagePath = path.join(uploadDirectory, imageName);
+
+				// Guardar la imagen localmente
+				await fs.promises.writeFile(imagePath, buffer);
+				return imagePath;
+			}));
 		}
 
 		const newPet = new Pet({
@@ -31,7 +42,7 @@ export async function createPet(req, res) {
 			rescuer: rescuer,
 			birthDate,
 			description,
-			images: imageUploads
+			images: imagePaths
 		});
 
 		await newPet.save();
@@ -41,8 +52,6 @@ export async function createPet(req, res) {
 		res.status(500).json({ error: 'Error al crear la mascota.' });
 	}
 }
-
-
 
 const allowedCharacteristicTypes = [
 	"size",
@@ -149,7 +158,6 @@ export async function getRescuerPets(req, res) {
 		const { rescuerId } = req.params;
 
 		const pets = await Pet.find({ rescuer: rescuerId });
-
 		res.status(200).json(pets);
 	} catch (error) {
 		res.status(500).json({ error: "Error al obtener las mascotas del rescatista." });
@@ -197,3 +205,42 @@ export async function editPet(req, res) {
 }
 
 
+export const updatePetImages = async () => {
+	// this will just update the images of the pet
+	// we will receive the pet id and the new images
+	try {
+		const pets = await Pet.find();
+		if (!pets) {
+			return null;
+		}
+
+		for (const pet of pets) {
+			let imagePaths = [];
+			const uploadDirectory = path.join(__dirname, 'uploads/pets'); // Ruta donde se guardarán las imágenes
+
+			// Crear la carpeta si no existe
+			if (!fs.existsSync(uploadDirectory)) {
+				fs.mkdirSync(uploadDirectory, { recursive: true });
+			}
+
+			// Reemplazar el imagePath guardado por uno del estilo http://localhost:3000/uploads/pets/<pet_id>-<index>.jpg
+			const files = fs.readdirSync(uploadDirectory).filter(file => file.includes(pet._id));
+
+			for (let i = 0; i < files.length; i++) {
+				let imageUrl = `http://localhost:4000/uploads/pets/${pet._id}-${i}.jpg`;
+				imagePaths.push(imageUrl);
+			}
+
+			pet.images = imagePaths;
+			await pet.save();
+		}
+
+		return pets;
+	} catch (error) {
+		console.error("Error al editar la mascota", error);
+		return null;
+	}
+};
+
+
+// updatePetImages();
