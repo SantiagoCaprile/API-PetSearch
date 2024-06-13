@@ -125,10 +125,6 @@ server.listen(port, () => {
 	console.log("Socket.io server listening on:" + port);
 });
 
-app.listen(port, '0.0.0.0', () => {
-	console.log(`Server is running on port ${port}`);
-});
-
 // Rutas
 app.use(usersRouter);
 app.use(breedsRouter);
