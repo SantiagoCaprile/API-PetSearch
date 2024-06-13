@@ -7,3 +7,5 @@
 /playwright/.cache/
 
 .DS_Store
+
+/uploads/
