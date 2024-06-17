@@ -32,6 +32,7 @@ jobs:
           echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> $GITHUB_ENV
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
           echo "FRONTEND_API_KEY=${{ secrets.FRONTEND_API_KEY }}" >> $GITHUB_ENV
+          echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> $GITHUB_ENV
 
       - name: Ensure port 4000 is free
         run: |
