@@ -21,10 +21,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Conectar a la base de datos de MongoDB
-connect(process.env.DB_CONNECTION_STRING, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-})
+connect(process.env.DB_CONNECTION_STRING)
 	.then(() => {
 		console.log("Conexión exitosa a la base de datos");
 	})
@@ -38,13 +35,31 @@ app.get("/", (req, res) => {
 });
 
 // Middleware para permitir solicitudes desde cualquier origen
-app.use(cors());
+const allowedOrigins = ['http://149.50.139.178:3000', 'http://localhost:3000/', 'http://localhost:3000'];
+
+const corsOptions = {
+	origin: function (origin, callback) {
+		if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+			callback(null, true);
+		} else {
+			callback(new Error('Not allowed by CORS'));
+		}
+	},
+	optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 // Middleware para analizar el cuerpo de las solicitudes
 app.use(json());
 
 // Middleware para registrar las solicitudes que llegan al servidor
 app.use(morgan("dev"));
+
+// To serve static files
+import path from "path";
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Socket.io para chats en tiempo real. Se crea un websocket en el servidor
 const server = createServer(app);
@@ -77,7 +92,7 @@ io.on("connection", (socket) => {
 			if (!chat) {
 				// Si no existe el chat, quizas deberia crearlo
 				// const newChat = new Chat({
-				// 	messages: [],
+				//  messages: [],
 				// });
 				// chat = await newChat.save();
 				throw new Error("Chat no encontrado");

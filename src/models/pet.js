@@ -26,8 +26,8 @@ const petSchema = new Schema(
 		},
 		birthDate: {
 			type: Date,
-			// date should be less than today, but allow todays date
-			// max: Date.now(),
+			// date should be less than tomorrow
+			max: Date.now() + 86400000,
 		},
 		description: {
 			type: String,
