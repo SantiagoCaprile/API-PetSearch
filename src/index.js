@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 });
 
 // Middleware para permitir solicitudes desde cualquier origen
-const allowedOrigins = ['http://149.50.139.178:3000', 'http://localhost:3000/', 'http://localhost:3000'];
+const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 const corsOptions = {
 	origin: function (origin, callback) {
