@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 });
 
 // Middleware para permitir solicitudes desde cualquier origen
-const allowedOrigins = process.env.ALLOWED_ORIGINS
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(", ");
 
 const corsOptions = {
 	origin: function (origin, callback) {
