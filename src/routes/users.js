@@ -9,6 +9,7 @@ import {
 } from "../controllers/usersController.js";
 import { authenticateToken } from '../middlewares/authMiddleware.js';
 import { validateApiKey } from "../middlewares/apiKeyMiddleware.js";
+import { authorizeRole } from "../middlewares/roleAuthMiddleware.js";
 
 // Ruta para verificar las credenciales de un usuario
 router.post("/users/verify", validateApiKey, verifyCredentials);
@@ -16,7 +17,7 @@ router.post("/users/verify", validateApiKey, verifyCredentials);
 router.post("/users", validateApiKey, createUser);
 
 // Ruta para obtener la lista de usuarios
-router.get("/users", authenticateToken, getUsers);
+router.get("/users", authenticateToken, authorizeRole("admin"), getUsers);
 // Ruta para obtener la informacion del usuario y ver su perfil
 router.get("/users/:id", authenticateToken, getUserById);
 
