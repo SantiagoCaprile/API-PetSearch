@@ -11,6 +11,7 @@ const locationsSchema = new Schema({
     name: { type: String, required: true },
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
+    active: { type: Boolean, required: true, default: false },
 });
 
 export const Province = model("Province", provinceSchema);
