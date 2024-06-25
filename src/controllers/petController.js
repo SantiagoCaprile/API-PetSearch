@@ -255,6 +255,19 @@ export async function editPet(req, res) {
 			pet.images = imagePath;
 		}
 
+		// update all the fields
+		pet.name = newPet.name;
+		pet.specie = newPet.specie;
+		pet.breed = newPet.breed;
+		pet.birthDate = newPet.birthDate;
+		pet.description = newPet.description;
+		pet.characteristics = newPet.characteristics.map((characteristic) => ({
+			key: characteristic.key,
+			value: characteristic.value,
+		}));
+		pet.sex = newPet.sex;
+		pet.size = newPet.size;
+
 		await pet.save();
 		res.status(200).json(pet);
 	} catch (error) {
