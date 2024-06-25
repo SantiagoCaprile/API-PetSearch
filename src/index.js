@@ -15,6 +15,8 @@ import locationsRouter from "./routes/locations.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import bodyParser from "body-parser";
+import cron from "node-cron";
+import { updateMetrics } from "./models/metrics.js";
 
 const app = express();
 const port = 4000;
@@ -135,3 +137,9 @@ app.use(rescuersRouter);
 app.use(chatsRouter);
 app.use(helpRouter);
 app.use(locationsRouter);
+
+// cron job
+new cron.schedule("0 0 * * *", async () => {
+	updateMetrics();
+});
+// updateMetrics();
