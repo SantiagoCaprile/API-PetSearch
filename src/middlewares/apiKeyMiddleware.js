@@ -3,6 +3,11 @@ import { config } from 'dotenv';
 config();
 const API_KEY = process.env.FRONTEND_API_KEY;
 
+/**
+ * @description Middleware to validate the API key 
+ * 
+ * The API key is expected to be in the x-api-key header.
+ */
 export function validateApiKey(req, res, next) {
     const apiKey = req.headers['x-api-key'];
 

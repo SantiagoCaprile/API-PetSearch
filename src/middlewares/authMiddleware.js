@@ -1,5 +1,10 @@
 import { verifyToken } from '../utils/auth.js';
 
+/**
+ * @description Middleware to authenticate the user with a JWT Token. 
+ * 
+ * This token is expected to be in the Authorization header.
+ */
 export function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1]; // Espera el formato "Bearer TOKEN"

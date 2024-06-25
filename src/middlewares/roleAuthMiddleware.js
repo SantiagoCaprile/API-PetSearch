@@ -1,4 +1,14 @@
 // middlewares/roleMiddleware.js
+
+/**
+ * @module roleAuthMiddleware
+ * @description Middleware to authorize a role or a list of roles
+ * The role is expected to be in the role header.
+ * 
+ * @param  {...string} roles - List of string with roles to authorize
+ * @returns {Function} statusCode - 401 if no role provided, 403 if access denied. If the role is authorized, it calls the next middleware.
+ * @example authorizeRole("admin", "user")
+ */
 export function authorizeRole(...roles) {
     return (req, res, next) => {
         const authHeader = req.headers['role'];
