@@ -9,7 +9,8 @@ import {
     postLocation,
     putEditLocation,
     getLocationsByProvince,
-    putActivateProvince
+    putChangeActiveProvince,
+    putChangeActiveLocation
 } from "../controllers/locationController.js";
 import { validateApiKey } from "../middlewares/apiKeyMiddleware.js";
 import { authorizeRole } from "../middlewares/roleAuthMiddleware.js";
@@ -35,9 +36,12 @@ router.get("/admin/locations", validateApiKey, authorizeRole("admin"), authentic
 router.post("/admin/locations", validateApiKey, authorizeRole("admin"), authenticateToken, postLocation);
 
 // Ruta para activar una provincia
-router.put("/admin/provinces/:province", validateApiKey, authorizeRole("admin"), authenticateToken, putActivateProvince);
+router.put("/admin/provinces/:id/activate", validateApiKey, authorizeRole("admin"), authenticateToken, putChangeActiveProvince);
 
 // Ruta para editar una localidad
 router.put("/admin/locations/:id", validateApiKey, authorizeRole("admin"), authenticateToken, putEditLocation);
+
+// Ruta para activar una localidad
+router.put("/admin/locations/:id/activate", validateApiKey, authorizeRole("admin"), authenticateToken, putChangeActiveLocation);
 
 export default router;

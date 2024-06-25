@@ -16,13 +16,18 @@ export async function getLocationsByProvince(req, res) {
     res.json(locations);
 }
 
-export async function putActivateProvince(req, res) {
-    const provinceName = req.params.province;
-    await Province.findOneAndUpdate(
-        { name: provinceName },
-        { active: true }
-    );
-    res.json({ message: "Provincia activada" });
+export async function putChangeActiveProvince(req, res) {
+    const id = req.params.id;
+    try {
+        await Province.findById(id).updateOne({
+            active: req.body.active
+        });
+        res.status(200).json({ message: "Status de provincia cambiada" });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({ message: "Error al cambiar el estado de la provincia" });
+    }
 }
 
 export async function getProvinces(req, res) {
@@ -60,4 +65,17 @@ export async function putEditLocation(req, res) {
     const { admin, name, lat, lng } = req.body;
     await Location.findByIdAndUpdate(locationId, { admin, name, lat, lng });
     res.json({ message: "Localidad actualizada" });
+}
+
+export async function putChangeActiveLocation(req, res) {
+    const locationId = req.params.id;
+    try {
+        await Location.findById(locationId).updateOne({
+            active: req.body.active
+        });
+        res.status(200).json({ message: "Status de localidad cambiada" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: "Error al cambiar el estado de la localidad" });
+    }
 }
