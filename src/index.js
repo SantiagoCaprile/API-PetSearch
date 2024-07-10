@@ -4,6 +4,7 @@ import { connect } from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 import morgan from "morgan";
+import helmet from "helmet";
 import breedsRouter from "../src/routes/breeds.js";
 import usersRouter from "./routes/users.js";
 import petsRouter from "./routes/pets.js";
@@ -50,11 +51,18 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Middleware para proteger la aplicación de ciertas vulnerabilidades
+app.use(helmet());
+
 // Middleware para analizar el cuerpo de las solicitudes
 app.use(json());
 
-// Middleware para registrar las solicitudes que llegan al servidor
-app.use(morgan("dev"));
+//Configura el servidor para confiar en el encabezado X-Forwarded-For establecido por el proxy inverso
+app.set('trust proxy', true);
+
+// Configura morgan para registrar la IP del cliente real
+app.use(morgan(':date[iso] :remote-addr :method :url :status :res[content-length] - :response-time ms'));
+
 
 // To serve static files
 import path from "path";
