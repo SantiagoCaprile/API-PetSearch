@@ -36,8 +36,7 @@ export async function saveImageInFs(base64Image, imageName, folder, height = 800
 
 export async function deleteImageFromFs(imageName, folder) {
     try {
-        console.log('deleting', imageName);
-        const filePath = path.join(__dirname, `uploads/${folder}`, imageName);
+        const filePath = path.join(__dirname, `uploads/${folder}/`, imageName);
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
             return true;
