@@ -7,6 +7,7 @@ import {
 } from "../controllers/rescuerController.js";
 import { authenticateToken } from '../middlewares/authMiddleware.js';
 import { validateApiKey } from "../middlewares/apiKeyMiddleware.js";
+import { getMetrics } from "../controllers/metricsController.js";
 
 // Ruta para crear un nuevo rescatista
 // router.post("/rescuers", validateApiKey, createRescuer);
@@ -19,6 +20,9 @@ router.get("/rescuers/:id", validateApiKey, getRescuerById);
 
 // Ruta para actualizar un rescatista
 router.put("/rescuers/:id", validateApiKey, authenticateToken, updateRescuer);
+
+// Ruta para obtener las métricas
+router.get("/rescuers-metrics", validateApiKey, getMetrics);
 
 // Ruta para agregar una mascota a un rescatista
 //router.post("/rescuers/:id/pets", validateApiKey, authenticateToken, addPetToRescuer);
