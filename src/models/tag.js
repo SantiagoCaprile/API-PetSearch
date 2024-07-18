@@ -44,13 +44,25 @@ const tagSchema = new Schema(
             type: Boolean,
             default: false,
         },
-        // healthHistory: {
-        //     type: [{
-        //         vaccine: String,
-        //         dateApplied: Date,
-        //         nextApplication: Date,
-        //     }]
-        // }
+        healthHistory: {
+            type: [{
+                medicine: String,
+                dateApplied: Date,
+                details: String,
+                nextApplication: Date,
+            }]
+        },
+        ownerPhone: {
+            type: String,
+            maxlength: 20,
+        },
+        coordinateHistory: {
+            type: [{
+                lat: Number,
+                lng: Number,
+                date: Date,
+            }]
+        },
     },
     {
         timestamps: true,

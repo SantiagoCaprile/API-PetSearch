@@ -1,4 +1,5 @@
 import Tag from "../models/tag.js";
+import { saveImageInFs, deleteImageFromFs } from "../utils/images.js";
 
 //ver si el tag esta registrado (todos) [GET]
 export async function isRegistered(req, res) {
@@ -40,13 +41,34 @@ export async function linkUserToTag(req, res) {
         }
         tag.user = userId;
         Object.keys(data).forEach(key => {
-            if (key === "_id" || key === "user") {
+            if (key === "_id" || key === "user" || key === "image") {
                 return;
             }
             tag[key] = data[key];
         });
+        if (data.image) {
+            //save the image in fs
+            const imageName = `${tag._id}-${Date.now().toString().slice(0, 10)}.webp`;
+            const folder = "tags";
+
+            //delete the old image if it exists
+            if (tag.image) {
+                const oldImageName = tag.image.split("/").pop();
+                const deleted = await deleteImageFromFs(oldImageName, folder);
+                if (!deleted) {
+                    return res.status(500).json({ message: "Error deleting image" });
+                }
+            }
+
+            //save the new image
+            const saved = await saveImageInFs(data.image, imageName, folder, 300, 80);
+            if (!saved) {
+                return res.status(500).json({ message: "Error saving image" });
+            }
+            tag.image = `http://localhost:4000/uploads/${folder}/${imageName}`;
+        }
         await tag.save();
-        res.status(200).json({ message: "User linked to tag" });
+        res.status(200).json({ message: "User linked to tag", updateCount: 1 });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -56,22 +78,13 @@ export async function linkUserToTag(req, res) {
 //una ruta para ver la data de la mascota [GET]
 export async function getTagData(req, res) {
     try {
-        const tag = await Tag.findById(req.params.id);
+        const tag = await Tag.findById(req.params.id).populate("user", "name");
         if (!tag) {
             return res.status(404).json({ message: "Tag not found" });
         }
         res.status(200).json(tag);
     } catch (error) {
         res.status(400).json({ error: error.message });
-    }
-}
-
-//una ruta para editar la data de la mascota [PUT]
-export async function editTagData(req, res) {
-    try {
-        //do later
-    } catch (error) {
-
     }
 }
 
@@ -108,6 +121,17 @@ export async function getTagsList(req, res) {
             unregistered: tags.length - registeredTags,
             tags: tags
         });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+export async function getUserTags(req, res) {
+    const userId = req.params.id;
+    console.log(userId);
+    try {
+        const tags = await Tag.find({ user: userId });
+        res.status(200).json(tags);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

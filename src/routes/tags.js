@@ -5,9 +5,9 @@ import {
     createTag,
     linkUserToTag,
     getTagData,
-    editTagData,
     unlinkUserToTag,
-    getTagsList
+    getTagsList,
+    getUserTags
 } from "../controllers/tagControllers.js"
 
 //una ruta para ver si el tag esta registrado (todos) [GET]
@@ -22,13 +22,13 @@ router.put("/tags/:id", linkUserToTag);
 //una ruta para ver la data de la mascota (todos) [GET]
 router.get("/tags/:id", getTagData);
 
-//una ruta para editar la data de la mascota (solo user) [PUT]
-router.put("/tags/edit/:id", editTagData);
-
 //una ruta para desvincular el tag de la mascota. (solo user) [PUT]
 router.put("/tags/unlink/:id", unlinkUserToTag);
 
 //ruta para obtener lista de tags registradas (solo admins) [GET]
 router.get("/tags", getTagsList);
+
+//ruta para obtener lista de tags de un usuario (solo user) [GET]
+router.get("/tags/user/:id", getUserTags);
 
 export default router;
