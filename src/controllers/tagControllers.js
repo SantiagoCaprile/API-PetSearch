@@ -97,6 +97,10 @@ export async function unlinkUserToTag(req, res) {
         if (!tagFounded) {
             return res.status(404).json({ message: "Tag not found" });
         }
+        //delete the image
+        const oldImageName = tagFounded.image.split("/").pop();
+        const folder = "tags";
+        await deleteImageFromFs(oldImageName, folder);
         Tag.deleteOne({ _id: id }).then(() => {
             Tag.create({ _id: id });
         });
