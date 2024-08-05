@@ -7,7 +7,9 @@ import {
     getTagData,
     unlinkUserToTag,
     getTagsList,
-    getUserTags
+    getUserTags,
+    addHealthHistory,
+    deleteHealthHistory
 } from "../controllers/tagControllers.js"
 
 //una ruta para ver si el tag esta registrado (todos) [GET]
@@ -30,5 +32,10 @@ router.get("/tags", getTagsList);
 
 //ruta para obtener lista de tags de un usuario (solo user) [GET]
 router.get("/tags/user/:id", getUserTags);
+
+//ruta para agregar historial de salud a un tag (solo user) [PUT]
+router.put("/tags/:id/healthHistory", addHealthHistory);
+
+router.delete("/tags/:id/healthHistory/:entryId", deleteHealthHistory);
 
 export default router;

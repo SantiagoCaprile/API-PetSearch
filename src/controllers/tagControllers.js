@@ -132,7 +132,6 @@ export async function getTagsList(req, res) {
 
 export async function getUserTags(req, res) {
     const userId = req.params.id;
-    console.log(userId);
     try {
         const tags = await Tag.find({ user: userId });
         res.status(200).json(tags);
@@ -140,3 +139,35 @@ export async function getUserTags(req, res) {
         res.status(400).json({ error: error.message });
     }
 }
+
+export async function addHealthHistory(req, res) {
+    try {
+        const { medicine, dateApplied, details, nextApplication } = req.body;
+        const tag = await Tag.findById(req.params.id);
+        tag.healthHistory.push({ medicine, dateApplied, details, nextApplication });
+        await tag.save();
+        res.status(201).json(tag.healthHistory[tag.healthHistory.length - 1]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export async function deleteHealthHistory(req, res) {
+    try {
+        const tagId = req.params.id;
+        const tag = await Tag.findById(tagId);
+        if (!tag) {
+            return res.status(404).json({ error: 'Tag not found' });
+        }
+        const entryId = req.params.entryId;
+        const entry = tag.healthHistory.id(entryId);
+        if (!entry) {
+            return res.status(404).json({ error: 'Health history entry not found' });
+        }
+        tag.healthHistory.pull(entryId);
+        await tag.save();
+        res.status(200).json({ message: 'Health history entry deleted' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
